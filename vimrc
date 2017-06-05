@@ -1,0 +1,12 @@
+colorscheme slate
+set nocompatible
+set showcmd
+set autoindent
+set expandtab
+set smarttab
+set shiftwidth=3
+set softtabstop=3
+set number
+set smartcase
+set hlsearch
+syntax on
