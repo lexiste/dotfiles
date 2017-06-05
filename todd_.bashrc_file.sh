@@ -250,29 +250,21 @@ alias ckear='clear'
 alias rm='rm -iv'
 alias cp='cp -iv'
 alias mv='mv -iv'
+
+# lazy old me
 alias mkdir='mkdir -p'
 alias more='less'
 alias nc='nc -v'
-
-# lazy old me
-alias h='history -a'
-alias j='jobs -l'
 alias which='type -a'
-alias ..='cd ..'
 alias du='du -kh'       # more readable output
 alias df='df -kTh'
 
-# The ubiquitous 'll': directories first, with alphanumeric sorting:
+# add color and various flags
+alias ls='ls -halG --color'
 alias ll='ls -lv --group-directories-first'
 alias la='ll -A'           #  Show hidden files.
- 
-# add color and various flags
-alias ls='ls -h --color'
-alias lx='ls -lXB'         #  Sort by extension.
-alias lk='ls -lSr'         #  Sort by size, biggest last.
 alias lt='ls -ltr'         #  Sort by date, most recent last.
 alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
-alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
 
 # aliases for the lazy person I am
 alias mc='mc -x'
