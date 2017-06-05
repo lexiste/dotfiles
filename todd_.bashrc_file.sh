@@ -237,6 +237,8 @@ export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hostsf
 # fat finger
 alias xs='cd'
 alias vf='cd'
+alias cd..='cd ..'
+alias ..='cd..'
 alias moer='more'
 alias moew='more'
 alias kk='ll'
