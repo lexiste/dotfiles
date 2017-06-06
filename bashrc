@@ -270,7 +270,7 @@ alias du='du -kh'       # more readable output
 alias df='df -kTh'
 
 # add color and various flags
-alias ls='ls -halG --color=auto'
+alias ls='ls -hlG --color=auto'
 alias l='ls -hl --color=auto'
 alias ll='ls -lv --group-directories-first'
 alias la='ll -A'           #  Show hidden files.
