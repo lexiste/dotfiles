@@ -256,6 +256,13 @@ alias mkdir='mkdir -p'
 alias more='less'
 alias nc='nc -v'
 
+# updates and installers
+alias ins='sudo apt-get install'
+alias rem='sudo apt-get purge'
+alias upd='sudo apt-get update'
+alias upg='sudo apt-get upgrade'
+alias upup='sudo apt-get update -y && sudo apt-get upgrade -y'
+
 # lazy old me
 alias which='type -a'
 alias ..='cd ..'
@@ -263,7 +270,8 @@ alias du='du -kh'       # more readable output
 alias df='df -kTh'
 
 # add color and various flags
-alias ls='ls -h --color'
+alias ls='ls -halG --color=auto'
+alias l='ls -hl --color=auto'
 alias ll='ls -lv --group-directories-first'
 alias la='ll -A'           #  Show hidden files.
 alias lk='ls -lSr'         #  Sort by size, biggest last.
@@ -271,6 +279,9 @@ alias ld='ls -ltr'         #  Sort by date, most recent last.
 alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
 
 # aliases for the lazy person I am
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 alias mc='mc -x'
 alias ports='sudo netstat -tulanp | less'
 alias reboot='sudo /sbin/reboot'
