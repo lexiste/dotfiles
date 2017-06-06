@@ -2,7 +2,9 @@
 # Personal ~/.bashrc file, find something I like, then make sure everyone has 
 # it.
 #
-# Last Updated: Wed Dec 28 10:16:17 EST 2016 # # Ideas from:
+# Last Updated: Mon Jun  5 20:48:01 EDT 2017
+# 
+# Ideas from:
 #  http://tldp.org/LDP/abs/html/sample-bashrc.html
 #
 # The choice of colors was done for a shell with a dark background (white on 
@@ -252,11 +254,9 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias mkdir='mkdir -p'
 alias more='less'
-alias nc='nv -v'
+alias nc='nc -v'
 
 # lazy old me
-alias h='history -a'
-alias j='jobs -l'
 alias which='type -a'
 alias ..='cd ..'
 alias du='du -kh'       # more readable output
@@ -264,16 +264,12 @@ alias df='df -kTh'
 
 # add color and various flags
 alias ls='ls -h --color'
-alias lx='ls -lXB'         #  Sort by extension.
-alias lk='ls -lSr'         #  Sort by size, biggest last.
-alias lt='ls -ltr'         #  Sort by date, most recent last.
-alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
-alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
-
-# The ubiquitous 'll': directories first, with alphanumeric sorting:
 alias ll='ls -lv --group-directories-first'
 alias la='ll -A'           #  Show hidden files.
- 
+alias lk='ls -lSr'         #  Sort by size, biggest last.
+alias ld='ls -ltr'         #  Sort by date, most recent last.
+alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
+
 # aliases for the lazy person I am
 alias mc='mc -x'
 alias ports='sudo netstat -tulanp | less'
