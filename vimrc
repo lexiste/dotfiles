@@ -1,4 +1,4 @@
-colorscheme slate
+colorscheme murphy
 set nocompatible
 set showcmd
 set autoindent
