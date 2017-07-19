@@ -2,7 +2,7 @@
 # Personal ~/.bashrc file, find something I like, then make sure everyone has 
 # it.
 #
-# Last Updated: Wed Jul 19 07:20:32 EDT 2017
+# Last Updated: Mon Jun  5 20:48:01 EDT 2017
 # 
 # Ideas from:
 #  http://tldp.org/LDP/abs/html/sample-bashrc.html
@@ -27,7 +27,7 @@ fi
 # This works for me - your mileage may vary. . . .
 # The problem is that different types of terminals give different answers to 
 # 'who am i' (rxvt in particular can be # troublesome) - however this code
-# seems to work in a majority of cases.
+# seems to work in a majority # of cases.
 #=============================================================================#
 
 function get_xserver () {
@@ -164,6 +164,20 @@ function load() {
   echo $((10#$SYSLOAD))   # convert to decimal
 }
 
+# Return color based on system load
+function load_color() {
+  local SYSLOAD=$(load)
+  if [ ${SYSLOAD} -gt ${XLOAD} ]; then
+    echo -en ${ALERT}
+  elif [ ${SYSLOAD} -gt ${MLOAD} ]; then
+    echo -en ${Red}
+  elif [ ${SYSLOAD} -gt ${SLOAD} ]; then
+    echo -en ${BRed}
+  else
+    echo -en ${Green}
+  fi
+}
+
 # Returns a color according to free disk space in $PWD.
 function disk_color() {
   if [ ! -w "${PWD}" ]; then # no write privileges in the current directory
@@ -188,26 +202,28 @@ extract () {
          *.tar.bz2)  tar xjf $1     ;;
          *.tar.gz)   tar xzf $1     ;;
          *.bz2)      bunzip2 $1     ;;
-         *.rar)      rar x $1       ;;
-         *.gz)       gunzip $1      ;;
+         *.rar)      rar x $1    ;;
+         *.gz)    gunzip $1      ;;
          *.tar)      tar xf $1      ;;
          *.tbz2)     tar xjf $1     ;;
          *.tgz)      tar xzf $1     ;;
-         *.zip)      unzip $1       ;;
-         *.Z)     uncompress $1     ;;
+         *.zip)      unzip $1    ;;
+         *.Z)     uncompress $1  ;;
          *)       echo "'$1' cannot be extracted via extract()" ;;
        esac
    else
       echo "'$1' is not a valid file"
    fi
-}
-
+                                                                                                                              }
 PROMPT_HISTORY="history -a"
 case ${TERM} in
   *term | rxvt | linux | xterm-256color)
-    PS1="[\d \@] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
+  # for some reason, the load_color() does not seem to be evaluated
+  # $SU does not appear to be evaluated properly
+    PS1="${load_color}\A${NC} ${SU}\u${NC}@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ \[$(tput sgr0)\] "
     ;;
   *)
+    #PS1="${load_color}\A${NC} ${SU}\u${NC}@${CNX}\h${NC} ${disk_color}\w${NC}\n--> "
     PS1="\A \u@\h \w "
   ;;
 esac

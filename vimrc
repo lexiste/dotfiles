@@ -1,4 +1,4 @@
-colorscheme murphy
+colorscheme ron
 set nocompatible
 set showcmd
 set autoindent
