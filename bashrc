@@ -205,10 +205,10 @@ extract () {
 PROMPT_HISTORY="history -a"
 case ${TERM} in
   *term | rxvt | linux | xterm-256color)
-    PS1="[\d \@] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
+    PS1="[\d \@] [\#] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
     ;;
   *)
-    PS1="\A \u@\h \w "
+    PS1="\A \u@\h \w \$"
   ;;
 esac
 
