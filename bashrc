@@ -22,37 +22,6 @@ if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
-#=============================================================================#
-# Automatic setting of $DISPLAY (if not set already).
-# This works for me - your mileage may vary. . . .
-# The problem is that different types of terminals give different answers to 
-# 'who am i' (rxvt in particular can be # troublesome) - however this code
-# seems to work in a majority of cases.
-#=============================================================================#
-
-function get_xserver () {
-  case $TERM in
-    xterm )
-      XSERVER=$(who am i | awk '{print $NF}' | tr -d ')''(' )
-      XSERVER=${XSERVER%%:*}
-    ;;
-    aterm | rxvt)
-    # Find some code that works here. ...
-    ;;
-  esac
-}
-
-if [ -z ${DISPLAY:=""} ]; then
-  get_xserver
-  if [[ -z ${XSERVER}  || ${XSERVER} == $(hostname) || ${XSERVER} == "unix" ]]; then
-    DISPLAY=":0.0"          # Display on local host.
-  else
-    DISPLAY=${XSERVER}:0.0     # Display on remote host.
-  fi
-fi
-
-export DISPLAY
-
 # Some house-keeping
 shopt -s cdspell
 shopt -s cmdhist
@@ -94,9 +63,10 @@ NC="\e[m"               # Color Reset
 
 
 ALERT=${BWhite}${On_Red} # Bold White on red background
+ALL_GOOD=${BWhite}${On_Green} # Bold White on red background
 
-echo -e "${BCYAN}This is BASH ${BRED}${BASH_VERSION%.*} - ${BCyan}DISPLAY${NC} on ${BRed}$DISPLAY${NC}"
-echo -e "It is now: ${ALERT}$(date +%c)${NC}\n"
+#echo -e "${BCYAN}This is BASH ${BRED}${BASH_VERSION%.*}${NC} - ${BCyan}DISPLAY${NC}"
+echo -e "It is now:${ALL_GOOD} $(date +%c) ${NC}\n"
 if [ -x /usr/games/fortune ]; then
   echo -e "$(/usr/games/fortune -s)\n"
 fi
@@ -111,12 +81,8 @@ trap _exit EXIT
 # Shell Prompts
 # ----------------------------------
 # Time:
-#   Green   = machine load low
-#   Orange  = machine load moderate
-#   Red     = machine load high
-#   ALERT   = machine load critical
 # User:
-#   Green   = normal user logong
+#   Green   = normal user logon
 #   Cyan    = user not matched to logon name
 #   Red     = root user logon
 # Host:
@@ -130,39 +96,31 @@ trap _exit EXIT
 #   Red     = current user does not have write access
 #=============================================================================#
 
+#set -x
+# Test the user type:
+if [ ${USER} == "root" ]; then
+  ME=${BRed}
+elif [[ "${USER}" -eq "${LOGNAME}" ]]; then
+   if [ ${SUDO_USER} ]; then
+      ME=${BCyan}
+   else
+      ME=${Green}
+   fi
+else
+  ME=${Green}
+fi
+
+#echo "me value <'$ME'>"
+#set +x
 
 # Test the connection type:
-if [ -n "${SSH_CONNECTION}" ]; then
+if [[ -n "${SSH_CONNECTION}" ]]; then
   CNX=${Green}
-elif [[ "$DISPLAY%%:0*}" != "" ]]; then
+elif [[ $(/usr/bin/who | awk '{print $2}') == ":1" ]]; then
   CNX=${Cyan}
 else
   CNX=${BRed}
 fi
-
-# Test the user type:
-if [[ ${UID} -eq 0 ]]; then
-  SU=${BRED}
-elif [[ "${USER}" == "${LOGNAME}" ]]; then
-   if [[ ${SUDO_USER} ]]; then
-      SU=${BCyan}
-   else
-      SU=${Green}
-   fi
-else
-  SU=${Green}
-fi
-
-# Test processor load:
-NCPU=$(grep -c 'processor' /proc/cpuinfo) # find number of CPU's 
-SLOAD=$(( 100*${NCPU} ))  # light load 
-MLOAD=$(( 200*${NCPU} ))  # moderate load
-XLOAD=$(( 400*${NCPU} ))  # high load
-
-function load() {
-  local SYSLOAD=$(cut -d " " -f1 /proc/loadavg | tr -d '.')
-  echo $((10#$SYSLOAD))   # convert to decimal
-}
 
 # Returns a color according to free disk space in $PWD.
 function disk_color() {
@@ -205,7 +163,8 @@ extract () {
 PROMPT_HISTORY="history -a"
 case ${TERM} in
   *term | rxvt | linux | xterm-256color)
-    PS1="[\d \@] [\#] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
+    #PS1="[\d \@] [\#] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
+    PS1="[\#] [\D{%d-%b-%y %H:%M:%S}] ${ME}\u${NC}@${CNX}\h${NC} ${disk_color}\w${NC}\n\$ "
     ;;
   *)
     PS1="\A \u@\h \w \$"
@@ -277,5 +236,3 @@ alias ct='ssh -i ~/Dropbox/Private/Identity todd@176.58.109.109'
 alias nat='curl http://icanhazip.com'
 alias weather='curl http://wttr.in'
 alias shred='shred -v -n5'
-alias loads='grep -c 'processor' /proc/cpuinfo; uptime;'
-alias tb='~/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/start-tor-browser.desktop'
