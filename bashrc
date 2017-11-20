@@ -2,7 +2,7 @@
 # Personal ~/.bashrc file, find something I like, then make sure everyone has 
 # it.
 #
-# Last Updated: Wed Jul 19 07:20:32 EDT 2017
+# Last Updated: 20.November.2017 1015
 # 
 # Ideas from:
 #  http://tldp.org/LDP/abs/html/sample-bashrc.html
@@ -116,7 +116,7 @@ fi
 # Test the connection type:
 if [[ -n "${SSH_CONNECTION}" ]]; then
   CNX=${Green}
-elif [[ $(/usr/bin/who | awk '{print $2}') == ":1" ]]; then
+elif [[ $(/usr/bin/who | awk '{print $5}') == "(:0)" ]]; then
   CNX=${Cyan}
 else
   CNX=${BRed}
