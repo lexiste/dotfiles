@@ -210,7 +210,7 @@ alias upup='sudo apt-get update -y && sudo apt-get upgrade -y'
 alias which='type -a'
 alias ..='cd ..'
 alias du='du -kh'       # more readable output
-alias df='df -kTh'
+alias df='df -h'
 
 # add color and various flags
 alias ls='ls -hlG --color=auto'
@@ -220,6 +220,7 @@ alias la='ll -A'           #  Show hidden files.
 alias lk='ls -lSr'         #  Sort by size, biggest last.
 alias ld='ls -ltr'         #  Sort by date, most recent last.
 alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
+alias lf=lc
 
 # aliases for the lazy person I am
 alias grep='grep --color=auto'
@@ -232,7 +233,9 @@ alias shutdown='sudo /sbin/poweroff'
 alias drop='~/.dropbox-dist/dropboxd &'
 alias ipt='sudo iptables -L --line-numbers'
 alias ip='ip -human -details -a -color a'
-alias ct='ssh -i ~/Dropbox/Private/Identity todd@176.58.109.109'
-alias nat='curl http://icanhazip.com'
+alias nat='curl http://ipecho.net/plain;echo'
 alias weather='curl http://wttr.in'
 alias shred='shred -v -n5'
+
+# launch tmux with a default screen setup
+alias tmux.main='tmux new-session -s main \; send-keys 'htop' C-m \; split-window -v -p 70 \; split-window -h -p 50 \;'
