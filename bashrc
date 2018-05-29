@@ -116,7 +116,7 @@ fi
 # Test the connection type:
 if [[ -n "${SSH_CONNECTION}" ]]; then
   CNX=${Green}
-elif [[ $(/usr/bin/who | awk '{print $5}') == "(:0)" ]]; then
+elif [[ $(/usr/bin/who | awk '{print $5}') == "(:1)" ]]; then
   CNX=${Cyan}
 else
   CNX=${BRed}
@@ -164,7 +164,7 @@ PROMPT_HISTORY="history -a"
 case ${TERM} in
   *term | rxvt | linux | xterm-256color)
     #PS1="[\d \@] [\#] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
-    PS1="[\#] [\D{%d-%b-%y %H:%M:%S}] ${ME}\u${NC}@${CNX}\h${NC} ${disk_color}\w${NC}\n\$ "
+    PS1="[\#] [\D{%d-%b-%y %H:%M}] ${ME}\u${NC}@${CNX}\h${NC} ${disk_color}\w${NC}\n\$ "
     ;;
   *)
     PS1="\A \u@\h \w \$"
@@ -233,7 +233,9 @@ alias shutdown='sudo /sbin/poweroff'
 alias drop='~/.dropbox-dist/dropboxd &'
 alias ipt='sudo iptables -L --line-numbers --numeric'
 alias ip='ip -human -details -a -color a'
-alias nat='curl http://ipecho.net/plain;echo'
+#alias nat='curl http://ipecho.net/plain;echo'
+alias nat='echo -n "ext IP: ";curl -s https://api.ipify.org;echo'
+
 alias weather='curl http://wttr.in'
 alias shred='shred -v -n5'
 
