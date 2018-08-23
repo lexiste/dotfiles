@@ -164,11 +164,12 @@ PROMPT_HISTORY="history -a"
 case ${TERM} in
   *term | rxvt | linux | xterm-256color)
     #PS1="[\d \@] [\#] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
-    PS1="[\#] \D{%d%b %H:%M} ${ME}\u${NC}@${CNX}\h${NC}:${disk_color}\w${NC}\n\$ "
+    #PS1="[\#] \D{%d%b %H:%M} ${ME}\u${NC}@${CNX}\h${NC}:${disk_color}\w${NC}\n\$ "
+    PS1="[\#] \D{%d%b %H:%M} ${ME}\u${NC} on ${CNX}\h${NC} in ${disk_color}\w${NC}\n"'\$ '
     cat /etc/motd
     ;;
   *)
-    PS1="\A \u@\h \w \$"
+    PS1="\A \u at \h \w \$"
   ;;
 esac
 
@@ -237,7 +238,7 @@ alias ip='ip -human -details -a -color a'
 alias nat='echo -n "ext IP: ";curl -s https://api.ipify.org;echo'
 
 alias weather='curl http://wttr.in'
-alias shred='shred -v -n5'
+alias shred='shred -v -n5 -u'
 
 # launch tmux with a default screen setup
 alias tmux.main='tmux new-session -s main \; send-keys 'htop' C-m \; split-window -v -p 75 \; split-window -h -p 50 \;'
