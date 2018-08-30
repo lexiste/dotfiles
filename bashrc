@@ -67,9 +67,6 @@ ALL_GOOD=${BWhite}${On_Green} # Bold White on red background
 
 #echo -e "${BCYAN}This is BASH ${BRED}${BASH_VERSION%.*}${NC} - ${BCyan}DISPLAY${NC}"
 echo -e "It is now: ${ALL_GOOD}$(date +%c)${NC}\n"
-if [ -x /usr/games/fortune ]; then
-  echo -e "$(/usr/games/fortune -s)\n"
-fi
 
 function _exit() {
   echo -e "${BRed}See ya'll later, enjoy!${NC}"
