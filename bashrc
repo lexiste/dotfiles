@@ -2,16 +2,10 @@
 # Personal ~/.bashrc file, find something I like, then make sure everyone has 
 # it.
 #
-# Last Updated: 20.November.2017 1015
+# Last Updated: 02-Oct-2018 15.00
 # 
 # Ideas from:
 #  http://tldp.org/LDP/abs/html/sample-bashrc.html
-#
-# The choice of colors was done for a shell with a dark background (white on 
-# black), and this is usually also suited for pure text-mode consoles (no X 
-# server available). If you use a white background, you'll have to do some 
-# other choices for readability.
-#
 #=============================================================================#
 
 # if we are not interactive, then do nothing 
