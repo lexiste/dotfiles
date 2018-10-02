@@ -165,11 +165,13 @@ case ${TERM} in
   *term | rxvt | linux | xterm-256color)
     #PS1="[\d \@] [\#] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
     #PS1="[\#] \D{%d%b %H:%M} ${ME}\u${NC}@${CNX}\h${NC}:${disk_color}\w${NC}\n\$ "
-    PS1="[\#] \D{%d%b %H:%M} ${ME}\u${NC} on ${CNX}\h${NC} in ${disk_color}\w${NC}\n"'\$ '
+    PS1="[\#] \D{%d-%b %H:%M} ${ME}\u${NC} on ${CNX}\h${NC} in ${disk_color}\w${NC}\n"'\$ '
+    #PS1="---[\#] ${ME}\u${NC} on ${CNX}\h${NC}\n-(\D{%d%b %H:%M})---> "
     cat /etc/motd
     ;;
   *)
-    PS1="\A \u at \h \w \$"
+    #PS1="\A \u at \h \w \$"
+    PS1="\D{%d-%b %H:%M} \u at \h in \w \$"
   ;;
 esac
 
@@ -215,12 +217,11 @@ alias du='du -kh'       # more readable output
 alias df='df -h'
 
 # add color and various flags
-alias ls='ls -hlG --color=auto'
-alias l='ls -hl --color=auto'
-alias ll='ls -lv --group-directories-first'
-alias la='ll -A'           #  Show hidden files.
-alias lk='ls -lSr'         #  Sort by size, biggest last.
-alias ld='ls -ltr'         #  Sort by date, most recent last.
+alias ls='ls -hlG --time-style=+"%Y-%m-%d %H:%M:%S" --color=auto'
+#alias ll='ls -lv --group-directories-first'
+#alias la='ll -A'           #  Show hidden files.
+#alias lk='ls -lSr'         #  Sort by size, biggest last.
+#alias ld='ls -ltr'         #  Sort by date, most recent last.
 alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
 alias lf=lc
 
@@ -232,7 +233,6 @@ alias mc='mc -x'
 alias ports='sudo netstat -tulanp | less'
 alias reboot='sudo /sbin/reboot'
 alias shutdown='sudo /sbin/poweroff'
-alias drop='~/.dropbox-dist/dropboxd &'
 alias ipt='sudo iptables -L --line-numbers --numeric'
 alias ip='ip -human -details -a -color a'
 alias nat='echo -n "ext IP: ";curl -s https://api.ipify.org;echo'
@@ -241,4 +241,6 @@ alias weather='curl http://wttr.in'
 alias shred='shred -v -n5 -u'
 
 # launch tmux with a default screen setup
-alias tmux.main='tmux new-session -s main \; send-keys 'htop' C-m \; split-window -v -p 75 \; split-window -h -p 50 \;'
+#alias tmux.main='tmux new-session -s main \; send-keys 'htop' C-m \; split-window -v -p 75 \; split-window -h -p 50 \;'
+alias tmux.main='tmux new-session -s main \; split-window -h -p 50 \;'
+
