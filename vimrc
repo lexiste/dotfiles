@@ -1,4 +1,4 @@
-colorscheme ron
+colorscheme frign
 set nocompatible
 set showcmd
 set autoindent
