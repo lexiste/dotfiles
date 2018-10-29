@@ -107,7 +107,7 @@ fi
 # Test the connection type:
 if [[ -n "${SSH_CONNECTION}" ]]; then
   CNX=${Green}
-elif [[ $(/usr/bin/who | awk '{print $5}') == "(:1)" ]]; then
+elif [[ -t 0 ]]; then
   CNX=${Cyan}
 else
   CNX=${BRed}
@@ -158,7 +158,7 @@ case ${TERM} in
     #PS1="[\#] \D{%d%b %H:%M} ${ME}\u${NC}@${CNX}\h${NC}:${disk_color}\w${NC}\n\$ "
     PS1="[\#] \D{%d-%b %H:%M} ${ME}\u${NC} on ${CNX}\h${NC} in ${disk_color}\w${NC}\n"'\$ '
     #PS1="---[\#] ${ME}\u${NC} on ${CNX}\h${NC}\n-(\D{%d%b %H:%M})---> "
-    cat /etc/motd
+    #cat /etc/motd
     ;;
   *)
     #PS1="\A \u at \h \w \$"
