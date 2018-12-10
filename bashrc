@@ -2,7 +2,7 @@
 # Personal ~/.bashrc file, find something I like, then make sure everyone has 
 # it.
 #
-# Last Updated: 02-Oct-2018 15.00
+# Last Updated: 01.Nov.2018 10.00
 # 
 # Ideas from:
 #  http://tldp.org/LDP/abs/html/sample-bashrc.html
@@ -67,27 +67,6 @@ function _exit() {
 }
 trap _exit EXIT
 
-
-#=============================================================================#
-# Shell Prompts
-# ----------------------------------
-# Time:
-# User:
-#   Green   = normal user logon
-#   Cyan    = user not matched to logon name
-#   Red     = root user logon
-# Host:
-#   Cyan    = local session (console)
-#   Green   = secure remote session (SSH)
-#   Red     = insecure remote session (Telnet, should not be in use)
-# Directory:
-#   Green   = >= 15% free disk space
-#   Orange  = < 15% free disk space
-#   ALERT   = < 5% free disk space
-#   Red     = current user does not have write access
-#=============================================================================#
-
-#set -x
 # Test the user type:
 if [ ${USER} == "root" ]; then
   ME=${BRed}
@@ -100,9 +79,6 @@ elif [[ "${USER}" -eq "${LOGNAME}" ]]; then
 else
   ME=${Green}
 fi
-
-#echo "me value <'$ME'>"
-#set +x
 
 # Test the connection type:
 if [[ -n "${SSH_CONNECTION}" ]]; then
@@ -129,6 +105,11 @@ function disk_color() {
   else
     echo -en ${Cyan}              # Current directory is size '0' (like /proc, /sys etc
   fi
+}
+
+thirdline () {
+   # function that will print every third line green to make reading easier
+   awk '{if (NR%3==0){print "\033[32m" $0 "\033[0m"} else{print}}';
 }
 
 extract () {
@@ -162,7 +143,7 @@ case ${TERM} in
     ;;
   *)
     #PS1="\A \u at \h \w \$"
-    PS1="\D{%d-%b %H:%M} \u at \h in \w \$"
+    PS1="\D{%d-%b %H:%M} ${ME}\u${NC} in ${disk_color}\w{$NC}\$ "
   ;;
 esac
 
@@ -209,10 +190,6 @@ alias df='df -h'
 
 # add color and various flags
 alias ls='ls -hlG --time-style=+"%Y-%m-%d %H:%M:%S" --color=auto'
-#alias ll='ls -lv --group-directories-first'
-#alias la='ll -A'           #  Show hidden files.
-#alias lk='ls -lSr'         #  Sort by size, biggest last.
-#alias ld='ls -ltr'         #  Sort by date, most recent last.
 alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
 alias lf=lc
 
@@ -229,7 +206,7 @@ alias ip='ip -human -details -a -color a'
 alias nat='echo -n "ext IP: ";curl -s https://api.ipify.org;echo'
 
 alias weather='curl http://wttr.in'
-alias shred='shred -v -n5 -u'
+alias shred='shred -n5 -u'
 
 # launch tmux with a default screen setup
 #alias tmux.main='tmux new-session -s main \; send-keys 'htop' C-m \; split-window -v -p 75 \; split-window -h -p 50 \;'
