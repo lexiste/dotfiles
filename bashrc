@@ -201,7 +201,7 @@ alias mc='mc -x'
 alias ports='sudo netstat -tulanp | less'
 alias reboot='sudo /sbin/reboot'
 alias shutdown='sudo /sbin/poweroff'
-alias ipt='sudo iptables -L --line-numbers --numeric'
+alias ipt='sudo iptables -L --line-numbers --numeric --verbose'
 alias ip='ip -human -details -a -color a'
 alias nat='echo -n "ext IP: ";curl -s https://api.ipify.org;echo'
 
