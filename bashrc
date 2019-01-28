@@ -1,14 +1,4 @@
-#=============================================================================#
-# Personal ~/.bashrc file, find something I like, then make sure everyone has 
-# it.
-#
-# Last Updated: 01.Nov.2018 10.00
-# 
-# Ideas from:
-#  http://tldp.org/LDP/abs/html/sample-bashrc.html
-#=============================================================================#
-
-# if we are not interactive, then do nothing 
+# if we are not interactive, then do nothing
 [ -z "$PS1" ] && return
 
 # Global definations if it exists
@@ -21,7 +11,7 @@ shopt -s cdspell
 shopt -s cmdhist
 set -o vi
 
-# Set some color definations (from Color Bash HowTo) 
+# Set some color definations (from Color Bash HowTo)
 #
 # Normal Colors
 Black='\e[0;30m'        # Black
@@ -211,4 +201,3 @@ alias shred='shred -n5 -u'
 # launch tmux with a default screen setup
 #alias tmux.main='tmux new-session -s main \; send-keys 'htop' C-m \; split-window -v -p 75 \; split-window -h -p 50 \;'
 alias tmux.main='tmux new-session -s main \; split-window -h -p 50 \;'
-
