@@ -142,6 +142,9 @@ case ${TERM} in
     PS1=$'\xe2\x94\x8c\xe2\x94\x80[\#] \D{%d-%b %H:%M} ['${ME}'\u'${NC}'@'${CNX}'\h'${NC}$']\xe2\x94\x80\xe2\x94\x80['${disk_color}'\w'${NC}$']\n\xe2\x94\x94\xe2\x94\x80\$ '
     #cat /etc/motd
     ;;
+  tmux*)
+   PS1="\w\$} "
+   ;;
   *)
     #PS1="\A \u at \h \w \$"
     PS1="\D{%d-%b %H:%M} ${ME}\u${NC} in ${disk_color}\w{$NC}\$ "
