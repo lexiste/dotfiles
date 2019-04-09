@@ -143,7 +143,7 @@ case ${TERM} in
     #cat /etc/motd
     ;;
   tmux*)
-   PS1="\w\$} "
+   PS1="\W\$ "
    ;;
   *)
     #PS1="\A \u at \h \w \$"
@@ -193,8 +193,8 @@ alias du='du -kh'       # more readable output
 alias df='df -h'
 
 # add color and various flags
-alias ls='ls -hlG --time-style=+"%Y-%m-%d %H:%M:%S" --color=auto'
-alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
+alias ls='ls -h --time-style=+"%Y-%m-%d %H:%M:%S" --color=auto'
+alias lc='ls -ltr'        #  Sort by/show change time,most recent last.
 alias lf=lc
 
 # aliases for the lazy person I am
