@@ -1,4 +1,3 @@
-colorscheme evening
 set nocompatible
 set showcmd
 set autoindent
