@@ -2,8 +2,6 @@
 # Personal ~/.bashrc file, find something I like, then make sure everyone has
 # it.
 #
-# Last Updated: 01.Nov.2018 10.00
-#
 # Ideas from:
 #  http://tldp.org/LDP/abs/html/sample-bashrc.html
 #=============================================================================#
@@ -133,14 +131,16 @@ extract () {
 PROMPT_HISTORY="history -a"
 case ${TERM} in
   *term | rxvt | linux | xterm-256color)
+    #PS1='\D{%d-%d %H:%M} ${ME}\u${NC} on ${CNX}\h${NC} in ${disk_color}\w${NC}\n\$ '
     #PS1="[\d \@] [\#] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
     #PS1="---[\#] ${ME}\u${NC} on ${CNX}\h${NC}\n-(\D{%d%b %H:%M})---> "
     #PS1="[\#] \D{%d%b %H:%M} ${ME}\u${NC}@${CNX}\h${NC}:${disk_color}\w${NC}\n\$ "
     #PS1="---[\#] ${ME}\u${NC} on ${CNX}\h${NC}\n-(\D{%d%b %H:%M})---> "
     #PS1="[\#] \D{%d-%b %H:%M} ${ME}\u${NC} on ${CNX}\h${NC} in ${disk_color}\w${NC}\n"'\$ '
 
-    PS1=$'\xe2\x94\x8c\xe2\x94\x80[\#] \D{%d-%b %H:%M} ['${ME}'\u'${NC}'@'${CNX}'\h'${NC}$']\xe2\x94\x80\xe2\x94\x80['${disk_color}'\w'${NC}$']\n\xe2\x94\x94\xe2\x94\x80\$ '
-    #cat /etc/motd
+    #PS1=$'\xe2\x94\x8c\xe2\x94\x80[\#] \D{%d-%b %H:%M} ['${ME}'\u'${NC}'@'${CNX}'\h'${NC}$']\xe2\x94\x80\xe2\x94\x80['${disk_color}'\w'${NC}$']\n\xe2\x94\x94\xe2\x94\x80\$ '
+    PS1=$'\xe2\x94\x8c\$ \D{%d-%b %H:%M} '${ME}'\u'${NC}' on '${CNX}'\h'${NC}$' in '${disk_color}'\w'${NC}$'\n\xe2\x94\x94\$ '
+    cat /etc/motd
     ;;
   tmux*)
    PS1="\W\$ "
