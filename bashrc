@@ -139,7 +139,11 @@ case ${TERM} in
     #PS1="[\#] \D{%d-%b %H:%M} ${ME}\u${NC} on ${CNX}\h${NC} in ${disk_color}\w${NC}\n"'\$ '
     #PS1=$'\xe2\x94\x8c\xe2\x94\x80[\#] \D{%d-%b %H:%M} ['${ME}'\u'${NC}'@'${CNX}'\h'${NC}$']\xe2\x94\x80\xe2\x94\x80['${disk_color}'\w'${NC}$']\n\xe2\x94\x94\xe2\x94\x80\$ '
     PS1=$'\xe2\x94\x8c\$ \D{%d-%b %H:%M} '${ME}'\u'${NC}' on '${CNX}'\h'${NC}$' in '${disk_color}'\w'${NC}$'\n\xe2\x94\x94\$ '
-    cat /etc/motd
+
+    # check if fortune and cowsay are executable, then print a small fortun with random character
+    if [ -x /usr/games/cowsay -a -x /usr/games/fortune ]; then
+      /usr/games/fortune -s | /usr/games/cowsay -f $(ls /usr/share/cowsay/cows/ | shuf -n1)
+    fi
     ;;
   tmux*)
    PS1="\w \$ "
