@@ -19,70 +19,67 @@ shopt -s cdspell
 shopt -s cmdhist
 set -o vi
 
-# Set some color definations (from Color Bash HowTo)
-#
-# Normal Colors
-Black='\e[0;30m'        # Black
-Red='\e[0;31m'          # Red
-Green='\e[0;32m'        # Green
-Yellow='\e[0;33m'       # Yellow
-Blue='\e[0;34m'         # Blue
-Purple='\e[0;35m'       # Purple
-Cyan='\e[0;36m'         # Cyan
-White='\e[0;37m'        # White
+##########################################################################
+# XXX: Coloured variables
+#  https://misc.flogisoft.com/bash/tip_colors_and_formatting
+#  fg, bg and format can be chained together like
+#  ${bold}${uline}${red}My Name is${normal}${yellow}${blink}Fred${normal}
+##########################################################################
+## foreground colors
+red=`echo -e "\033[31m"`
+green=`echo -e "\033[32m"`
+yellow=`echo -e "\033[33m"`
+blue=`echo -e "\033[34m"`
+purple=`echo -e "\033[35m"`
+cyan=`echo -e "\033[36m"`
+lt_red=`echo -e "\033[91m"`
+lt_green=`echo -e "\033[92m"`
+white=`echo -e "\033[97m"`
 
-# Bold
-BBlack='\e[1;30m'       # Black
-BRed='\e[1;31m'         # Red
-BGreen='\e[1;32m'       # Green
-BYellow='\e[1;33m'      # Yellow
-BBlue='\e[1;34m'        # Blue
-BPurple='\e[1;35m'      # Purple
-BCyan='\e[1;36m'        # Cyan
-BWhite='\e[1;37m'       # White
+## background colors .. don't need many
+bg_normal=`echo -e "\033[49m"`
+bg_white=`echo -e "\033[40m"`
+bg_red=`echo -e "\033[41m"`
+bg_green=`echo -e "\033[42m"`
 
-# Background
-On_Black='\e[40m'       # Black
-On_Red='\e[41m'         # Red
-On_Green='\e[42m'       # Green
-On_Yellow='\e[43m'      # Yellow
-On_Blue='\e[44m'        # Blue
-On_Purple='\e[45m'      # Purple
-On_Cyan='\e[46m'        # Cyan
-On_White='\e[47m'       # White
+## text setting
+normal=`echo -e "\033[0m"`
+bold=`echo -e "\033[1m"`
+uline=`echo -e "\033[4m"`
+blink=`echo -e "\033[5m"`
+hide=`echo -e "\033[8m"`
 
-NC='\e[m'               # Color Reset
+ALERT=${bold}${bg_white}${red} # Bold White on red background
+#ALL_GOOD=${bold}${bg_green}${white} # Bold White on red background
+ALL_GOOD=${lt_green}
 
-ALERT=${BWhite}${On_Red} # Bold White on red background
-ALL_GOOD=${BWhite}${On_Green} # Bold White on red background
-
-echo -e "It is now: ${ALL_GOOD}$(date +%c)${NC}\n"
+echo -e "It is now: ${ALL_GOOD}$(date +%c)${normal}\n"
 
 function _exit() {
-  echo -e "${BRed}See ya'll later, enjoy!${NC}"
+  echo -e "${bg_white}${red}See ya'll later, enjoy!${normal}"
 }
 trap _exit EXIT
 
 # Test the user type:
 if [ ${USER} == "root" ]; then
-  ME=${BRed}
+  ME=${bold}${red}
 elif [[ "${USER}" -eq "${LOGNAME}" ]]; then
    if [ ${SUDO_USER} ]; then
-      ME=${BCyan}
+      ME=${cyan}
    else
-      ME=${Green}
+      ME=${green}
    fi
 else
-  ME=${Green}
+  ME=${green}
 fi
 
 # Test the connection type:
 if [[ -n "${SSH_CONNECTION}" ]]; then
-  CNX=${Green}
+  CNX=${green}
 elif [[ -t 0 ]]; then
-  CNX=${Cyan}
+  CNX=${cyan}
 else
-  CNX=${BRed}
+  CNX=${lt_red}
 fi
 
 # Returns a color according to free disk space in $PWD.
@@ -94,12 +91,12 @@ function disk_color() {
     if [ ${used} -gt 95 ]; then
       echo -en ${ALERT}           # Disk almost full (>95%).
     elif [ ${used} -gt 85 ]; then
-      echo -en ${BRed}            # Free disk space almost gone.
+      echo -en ${lt_red}            # Free disk space almost gone.
     else
-      echo -en ${Green}           # Free disk space is ok.
+      echo -en ${green}           # Free disk space is ok.
     fi
   else
-    echo -en ${Cyan}              # Current directory is size '0' (like /proc, /sys etc
+    echo -en ${cyan}              # Current directory is size '0' (like /proc, /sys etc
   fi
 }
 
@@ -131,18 +128,19 @@ extract () {
 PROMPT_HISTORY="history -a"
 case ${TERM} in
   *term | rxvt | linux | xterm-256color)
-    #PS1='\D{%d-%d %H:%M} ${ME}\u${NC} on ${CNX}\h${NC} in ${disk_color}\w${NC}\n\$ '
-    #PS1="[\d \@] [\#] \u@${CNX}\h${NC} ${disk_color}\w${NC}\n--\\$ "
-    #PS1="---[\#] ${ME}\u${NC} on ${CNX}\h${NC}\n-(\D{%d%b %H:%M})---> "
-    #PS1="[\#] \D{%d%b %H:%M} ${ME}\u${NC}@${CNX}\h${NC}:${disk_color}\w${NC}\n\$ "
-    #PS1="---[\#] ${ME}\u${NC} on ${CNX}\h${NC}\n-(\D{%d%b %H:%M})---> "
-    #PS1="[\#] \D{%d-%b %H:%M} ${ME}\u${NC} on ${CNX}\h${NC} in ${disk_color}\w${NC}\n"'\$ '
-    #PS1=$'\xe2\x94\x8c\xe2\x94\x80[\#] \D{%d-%b %H:%M} ['${ME}'\u'${NC}'@'${CNX}'\h'${NC}$']\xe2\x94\x80\xe2\x94\x80['${disk_color}'\w'${NC}$']\n\xe2\x94\x94\xe2\x94\x80\$ '
-    PS1=$'\xe2\x94\x8c\$ \D{%d-%b %H:%M} '${ME}'\u'${NC}' on '${CNX}'\h'${NC}$' in '${disk_color}'\w'${NC}$'\n\xe2\x94\x94\$ '
+    #PS1='\D{%d-%d %H:%M} ${ME}\u${normal} on ${CNX}\h${normal} in ${disk_color}\w${normal}\n\$ '
+    #PS1="[\d \@] [\#] \u@${CNX}\h${normal} ${disk_color}\w${normal}\n--\\$ "
+    #PS1="---[\#] ${ME}\u${normal} on ${CNX}\h${normal}\n-(\D{%d%b %H:%M})---> "
+    #PS1="[\#] \D{%d%b %H:%M} ${ME}\u${normal}@${CNX}\h${normal}:${disk_color}\w${normal}\n\$ "
+    #PS1="---[\#] ${ME}\u${normal} on ${CNX}\h${normal}\n-(\D{%d%b %H:%M})---> "
+    #PS1="[\#] \D{%d-%b %H:%M} ${ME}\u${normal} on ${CNX}\h${normal} in ${disk_color}\w${normal}\n"'\$ '
+    #PS1=$'\xe2\x94\x8c\xe2\x94\x80[\#] \D{%d-%b %H:%M} ['${ME}'\u'${normal}'@'${CNX}'\h'${normal}$']\xe2\x94\x80\xe2\x94\x80['${disk_color}'\w'${normal}$']\n\xe2\x94\x94\xe2\x94\x80\$ '
+    PS1=$'\xe2\x94\x8c\$ \D{%d-%b %H:%M} '${ME}'\u'${normal}' on '${CNX}'\h'${normal}$' in '${disk_color}'\w'${normal}$'\n\xe2\x94\x94\$ '
 
     # check if fortune and cowsay are executable, then print a small fortun with random character
     if [ -x /usr/games/cowsay -a -x /usr/games/fortune ]; then
-      /usr/games/fortune -s | /usr/games/cowsay -f $(ls /usr/share/cowsay/cows/ | shuf -n1)
+      #/usr/games/fortune -s | /usr/games/cowsay -f $(ls /usr/share/cowsay/cows/ | shuf -n1)
+      /usr/games/fortune -s | /usr/games/cowsay -f tux
     fi
     ;;
   tmux*)
@@ -150,14 +148,14 @@ case ${TERM} in
    ;;
   *)
     #PS1="\A \u at \h \w \$"
-    PS1="\D{%d-%b %H:%M} ${ME}\u${NC} in ${disk_color}\w{$NC}\$ "
+    PS1="\D{%d-%b %H:%M} ${ME}\u${normal} in ${disk_color}\w${normal}\$ "
   ;;
 esac
 
 export PATH=${PATH}:/usr/local/scripts:~/scripts
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
 export HISTIGNORE="&:ls:bg:fg:ll:h"
-export HISTTIMEFORMAT="$(echo -e ${BCyan})[%d/%m %H:%M:%S]$(echo -e ${NC}) "
+export HISTTIMEFORMAT="$(echo -e ${bold}${cyan})[%d/%m %H:%M:%S]$(echo -e ${normal}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
 
@@ -182,13 +180,6 @@ alias mkdir='mkdir -p'
 alias more='less'
 alias nc='nc -v'
 
-# updates and installers
-alias ins='sudo apt-get install'
-alias rem='sudo apt-get purge'
-alias upd='sudo apt-get update'
-alias upg='sudo apt-get upgrade'
-alias upup='sudo apt-get update -y && sudo apt-get upgrade -y'
-
 # lazy old me
 alias which='type -a'
 alias ..='cd ..'
@@ -208,10 +199,8 @@ alias mc='mc -x'
 alias ports='sudo netstat -tulanp | less'
 alias reboot='sudo /sbin/reboot'
 alias shutdown='sudo /sbin/poweroff'
-alias ipt='sudo iptables -L --line-numbers --numeric --verbose'
-alias ip='ip -human -details -a -color a'
+alias ipt='sudo iptables -L -n -v --line-numbers'
 alias nat='echo -n "ext IP: ";curl -s https://api.ipify.org;echo'
-
 alias weather='curl http://wttr.in'
 alias shred='shred -n5 -u'
 
