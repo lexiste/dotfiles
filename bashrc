@@ -144,7 +144,7 @@ case ${TERM} in
     fi
     ;;
   tmux*)
-   PS1="\w \$ "
+   PS1="\h \w \$ "
    ;;
   *)
     #PS1="\A \u at \h \w \$"
