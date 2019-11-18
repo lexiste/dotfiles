@@ -202,7 +202,7 @@ alias shutdown='sudo /sbin/poweroff'
 alias ipt='sudo iptables -L -n -v --line-numbers'
 alias nat='echo -n "ext IP: ";curl -s https://api.ipify.org;echo'
 alias weather='curl http://wttr.in'
-alias shred='shred -n5 -u'
+alias wipe='shred -n5 -u --zero --verbose --remove=wipesync'
 
 # launch tmux with a default screen setup
 #alias tmux.main='tmux new-session -s main \; send-keys 'htop' C-m \; split-window -v -p 75 \; split-window -h -p 50 \;'
