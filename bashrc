@@ -55,11 +55,72 @@ ALL_GOOD=${lt_green}
 
 echo -e "It is now: ${ALL_GOOD}$(date +%c)${normal}\n"
 
+##### FUNCTIONS #####
+thirdline () {
+   # function that will print every third line green to make reading easier
+   awk '{if (NR%3==0){print "\033[32m" $0 "\033[0m"} else{print}}';
+}
+
 function _exit() {
   echo -e "${bg_white}${red}See ya'll later, enjoy!${normal}"
 }
 trap _exit EXIT
 
+# Returns a color according to free disk space in $PWD.
+function disk_color() {
+  if [ ! -w "${PWD}" ]; then # no write privileges in the current directory
+    echo -en ${Red}
+  elif [ -s "${PWD}" ] ; then
+    local used=$(command df -P "$PWD" | awk 'END {print $5} {sub(/%/,"")}')
+    if [ ${used} -gt 95 ]; then
+      echo -en ${ALERT}           # Disk almost full (>95%).
+    elif [ ${used} -gt 85 ]; then
+      echo -en ${lt_red}            # Free disk space almost gone.
+    else
+      echo -en ${green}           # Free disk space is ok.
+    fi
+  else
+    echo -en ${cyan}              # Current directory is size '0' (like /proc, /sys etc
+  fi
+}
+
+extract () {
+   if [ -f $1 ] ; then
+      case $1 in
+         *.tar.bz2)  tar xjf $1     ;;
+         *.tar.gz)   tar xzf $1     ;;
+         *.bz2)      bunzip2 $1     ;;
+         *.rar)      rar x $1       ;;
+         *.gz)       gunzip $1      ;;
+         *.tar)      tar xf $1      ;;
+         *.tbz2)     tar xjf $1     ;;
+         *.tgz)      tar xzf $1     ;;
+         *.zip)      unzip $1       ;;
+         *.Z)        uncompress $1   ;;
+         *.xz)       xz -d $1        ;;
+         *)          echo "'$1' cannot be extracted via extract()" ;;
+       esac
+   else
+      echo "'$1' is not a valid file"
+   fi
+}
+
+function nmap-init {
+  nmap-tcp $1 >/dev/null 2>&1 &
+  nmap-udp $1 >/dev/null 2>&1 &
+  nmap-standard $1
+}
+function nmap-tcp {
+  nmap -p- $1 -oN tcp-full.nmap
+}
+function nmap-udp {
+  nmap -sU $1 -oN udp-full.nmap
+}
+function nmap-standard {
+  nmap -sC -sV --top-ports=500 $1 -oN init-nmap.nmap
+}
+
+##### TESTS FOR PROMPT STUFF #####
 # Test the user type:
 if [ ${USER} == "root" ]; then
   ME=${bold}${red}
@@ -82,49 +143,6 @@ else
   CNX=${lt_red}
 fi
 
-# Returns a color according to free disk space in $PWD.
-function disk_color() {
-  if [ ! -w "${PWD}" ]; then # no write privileges in the current directory
-    echo -en ${Red}
-  elif [ -s "${PWD}" ] ; then
-    local used=$(command df -P "$PWD" | awk 'END {print $5} {sub(/%/,"")}')
-    if [ ${used} -gt 95 ]; then
-      echo -en ${ALERT}           # Disk almost full (>95%).
-    elif [ ${used} -gt 85 ]; then
-      echo -en ${lt_red}            # Free disk space almost gone.
-    else
-      echo -en ${green}           # Free disk space is ok.
-    fi
-  else
-    echo -en ${cyan}              # Current directory is size '0' (like /proc, /sys etc
-  fi
-}
-
-thirdline () {
-   # function that will print every third line green to make reading easier
-   awk '{if (NR%3==0){print "\033[32m" $0 "\033[0m"} else{print}}';
-}
-
-extract () {
-   if [ -f $1 ] ; then
-      case $1 in
-         *.tar.bz2)  tar xjf $1     ;;
-         *.tar.gz)   tar xzf $1     ;;
-         *.bz2)      bunzip2 $1     ;;
-         *.rar)      rar x $1       ;;
-         *.gz)       gunzip $1      ;;
-         *.tar)      tar xf $1      ;;
-         *.tbz2)     tar xjf $1     ;;
-         *.tgz)      tar xzf $1     ;;
-         *.zip)      unzip $1       ;;
-         *.Z)     uncompress $1     ;;
-         *)       echo "'$1' cannot be extracted via extract()" ;;
-       esac
-   else
-      echo "'$1' is not a valid file"
-   fi
-}
-
 PROMPT_HISTORY="history -a"
 case ${TERM} in
   *term | rxvt | linux | xterm-256color)
@@ -139,7 +157,6 @@ case ${TERM} in
 
     # check if fortune and cowsay are executable, then print a small fortun with random character
     if [ -x /usr/games/cowsay -a -x /usr/games/fortune ]; then
-      #/usr/games/fortune -s | /usr/games/cowsay -f $(ls /usr/share/cowsay/cows/ | shuf -n1)
       /usr/games/fortune -s | /usr/games/cowsay -f tux
     fi
     ;;
@@ -152,7 +169,8 @@ case ${TERM} in
   ;;
 esac
 
-export PATH=${PATH}:/usr/local/scripts:~/scripts
+export JAVA_HOME="/usr/lib/jvm/jdk-11.0.5"
+export PATH=${PATH}:/usr/local/scripts:~/scripts:${JAVA_HOME}/bin
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
 export HISTIGNORE="&:ls:bg:fg:ll:h"
 export HISTTIMEFORMAT="$(echo -e ${bold}${cyan})[%d/%m %H:%M:%S]$(echo -e ${normal}) "

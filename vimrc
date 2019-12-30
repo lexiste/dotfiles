@@ -1,4 +1,3 @@
-colorscheme frign
 set nocompatible
 set showcmd
 set autoindent
