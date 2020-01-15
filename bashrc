@@ -15,8 +15,13 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # Some house-keeping
+## https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
 shopt -s cdspell
 shopt -s cmdhist
+shopt -s dirspell
+shopt -s histappend
+shopt -s histverify
+chattr +a ~/.bash_history
 set -o vi
 
 ##########################################################################
@@ -105,21 +110,6 @@ extract () {
    fi
 }
 
-function nmap-init {
-  nmap-tcp $1 >/dev/null 2>&1 &
-  nmap-udp $1 >/dev/null 2>&1 &
-  nmap-standard $1
-}
-function nmap-tcp {
-  nmap -p- $1 -oN tcp-full.nmap
-}
-function nmap-udp {
-  nmap -sU $1 -oN udp-full.nmap
-}
-function nmap-standard {
-  nmap -sC -sV --top-ports=500 $1 -oN init-nmap.nmap
-}
-
 ##### TESTS FOR PROMPT STUFF #####
 # Test the user type:
 if [ ${USER} == "root" ]; then
@@ -155,7 +145,7 @@ case ${TERM} in
     #PS1=$'\xe2\x94\x8c\xe2\x94\x80[\#] \D{%d-%b %H:%M} ['${ME}'\u'${normal}'@'${CNX}'\h'${normal}$']\xe2\x94\x80\xe2\x94\x80['${disk_color}'\w'${normal}$']\n\xe2\x94\x94\xe2\x94\x80\$ '
     PS1=$'\xe2\x94\x8c\$ \D{%d-%b %H:%M} '${ME}'\u'${normal}' on '${CNX}'\h'${normal}$' in '${disk_color}'\w'${normal}$'\n\xe2\x94\x94\$ '
 
-    # check if fortune and cowsay are executable, then print a small fortun with random character
+    # check if fortune and cowsay are executable, then print a small fortune with random character
     if [ -x /usr/games/cowsay -a -x /usr/games/fortune ]; then
       /usr/games/fortune -s | /usr/games/cowsay -f tux
     fi
@@ -172,8 +162,10 @@ esac
 export JAVA_HOME="/usr/lib/jvm/jdk-11.0.5"
 export PATH=${PATH}:/usr/local/scripts:~/scripts:${JAVA_HOME}/bin
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
+export HISTSIZE=1000000
+export HISTFILESIZE=1000000
 export HISTIGNORE="&:ls:bg:fg:ll:h"
-export HISTTIMEFORMAT="$(echo -e ${bold}${cyan})[%d/%m %H:%M:%S]$(echo -e ${normal}) "
+export HISTTIMEFORMAT="$(echo -e ${bold}${cyan})[%Y%b%d %T]$(echo -e ${normal}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
 
