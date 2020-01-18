@@ -14,6 +14,11 @@ if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
+# load a users alias file if it exists, keeps them out of bashrc
+if [ -f ~/.bash_aliases ]; then
+   . ~/.bash_aliases
+fi
+
 # Some house-keeping
 ## https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
 shopt -s cdspell
@@ -168,52 +173,3 @@ export HISTIGNORE="&:ls:bg:fg:ll:h"
 export HISTTIMEFORMAT="$(echo -e ${bold}${cyan})[%Y%b%d %T]$(echo -e ${normal}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
-
-#============================
-# Aliases for commands I typically fat finger, or where I'm just lazy
-#============================
-# fat finger
-alias xs='cd'
-alias vf='cd'
-alias moer='more'
-alias moew='more'
-alias kk='ll'
-alias cls='clear'
-alias celar='clear'
-alias ckear='clear'
-
-# protect clobbering files
-alias rm='rm -iv'
-alias cp='cp -iv'
-alias mv='mv -iv'
-alias mkdir='mkdir -p'
-alias more='less'
-alias nc='nc -v'
-
-# lazy old me
-alias which='type -a'
-alias ..='cd ..'
-alias du='du -kh'       # more readable output
-alias df='df -h'
-
-# add color and various flags
-alias ls='ls -h --time-style=+"%Y-%m-%d %H:%M:%S" --color=auto'
-alias lc='ls -ltr'        #  Sort by/show change time,most recent last.
-alias lf=lc
-
-# aliases for the lazy person I am
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-alias mc='mc -x'
-alias ports='sudo netstat -tulanp | less'
-alias reboot='sudo /sbin/reboot'
-alias shutdown='sudo /sbin/poweroff'
-alias ipt='sudo iptables -L -n -v --line-numbers'
-alias nat='echo -n "ext IP: ";curl -s https://api.ipify.org;echo'
-alias weather='curl http://wttr.in'
-alias wipe='shred -n5 -u --zero --verbose --remove=wipesync'
-
-# launch tmux with a default screen setup
-#alias tmux.main='tmux new-session -s main \; send-keys 'htop' C-m \; split-window -v -p 75 \; split-window -h -p 50 \;'
-alias tmux.main='tmux new-session -s main \; split-window -h -p 50 \;'
