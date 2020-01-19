@@ -18,7 +18,8 @@ alias du='du -kh'       # more readable output
 alias df='df -Tha --total'
 alias ls='ls -h --time-style=+"%Y-%m-%d %H:%M:%S" --color=auto'
 alias lc='ls -ltr'        #  Sort by/show change time,most recent last.
-alias lf=lc
+alias lf='ls -lth'
+
 # aliases for the lazy person I am
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'

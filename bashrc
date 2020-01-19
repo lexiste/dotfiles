@@ -26,7 +26,7 @@ shopt -s cmdhist
 shopt -s dirspell
 shopt -s histappend
 shopt -s histverify
-chattr +a ~/.bash_history
+#chattr +a ~/.bash_history
 set -o vi
 
 ##########################################################################
