@@ -76,6 +76,13 @@ function _exit() {
 }
 trap _exit EXIT
 
+# function that we can call on-demand to enable all commands and output to a log file, useful when performing and audit where you want to log command(s), variables and results for later review and reporting
+function rec() {
+   # https://www.contextis.com/en/blog/logging-like-a-lumberjack
+   #  use something like aha to convert log file to readable HTML format
+   test "$(ps -ocommand= -p $PPID | awk '{print $1}')" == 'script' || (script -f $HOME/logs/$(date +"%Y%b%d_%H-%M-%S")_shell.log)
+}
+
 # Returns a color according to free disk space in $PWD.
 function disk_color() {
   if [ ! -w "${PWD}" ]; then # no write privileges in the current directory
@@ -94,20 +101,22 @@ function disk_color() {
   fi
 }
 
+# function that can extract any standard compressed file type based on extension
 extract () {
    if [ -f $1 ] ; then
       case $1 in
+         *.tar)      tar xf $1      ;;
          *.tar.bz2)  tar xjf $1     ;;
          *.tar.gz)   tar xzf $1     ;;
          *.bz2)      bunzip2 $1     ;;
          *.rar)      rar x $1       ;;
          *.gz)       gunzip $1      ;;
-         *.tar)      tar xf $1      ;;
          *.tbz2)     tar xjf $1     ;;
          *.tgz)      tar xzf $1     ;;
          *.zip)      unzip $1       ;;
-         *.Z)        uncompress $1   ;;
-         *.xz)       xz -d $1        ;;
+         *.Z)        uncompress $1  ;;
+         *.7z)       7z x $1        ;;
+         *.xz)       xz -d $1       ;;
          *)          echo "'$1' cannot be extracted via extract()" ;;
        esac
    else
@@ -156,7 +165,7 @@ case ${TERM} in
     fi
     ;;
   tmux*)
-   PS1="\h \w \$ "
+   PS1="\u:\h \w \$ "
    ;;
   *)
     #PS1="\A \u at \h \w \$"
@@ -164,8 +173,16 @@ case ${TERM} in
   ;;
 esac
 
+## some checks for various folders, build string to append to path
+if [ -d ~/scripts/bash ]; then
+  appendPATH="~/scripts/bash"
+fi
+if [ -d ~/scripts/python ]; then
+  appendPATH=${appendPATH}:"~/scripts/python"
+fi
+
 export JAVA_HOME="/usr/lib/jvm/jdk-11.0.5"
-export PATH=${PATH}:/usr/local/scripts:~/scripts:${JAVA_HOME}/bin
+export PATH=${PATH}:/usr/local/scripts:${JAVA_HOME}/bin:${appendPATH}
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
 export HISTSIZE=1000000
 export HISTFILESIZE=1000000
