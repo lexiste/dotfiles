@@ -9,6 +9,7 @@
 # if we are not interactive, then do nothing
 [ -z "$PS1" ] && return
 
+
 # Global definations if it exists
 if [ -f /etc/bashrc ]; then
   . /etc/bashrc
@@ -31,39 +32,13 @@ set -o vi
 
 ##########################################################################
 # XXX: Coloured variables
-#  https://misc.flogisoft.com/bash/tip_colors_and_formatting
-#  fg, bg and format can be chained together like
-#  ${bold}${uline}${red}My Name is${normal}${yellow}${blink}Fred${normal}
 ##########################################################################
-## foreground colors
-red=`echo -e "\033[31m"`
-green=`echo -e "\033[32m"`
-yellow=`echo -e "\033[33m"`
-blue=`echo -e "\033[34m"`
-purple=`echo -e "\033[35m"`
-cyan=`echo -e "\033[36m"`
-lt_red=`echo -e "\033[91m"`
-lt_green=`echo -e "\033[92m"`
-white=`echo -e "\033[97m"`
+coltable="/home/todd/scripts/bash/COL_TABLE"
+if [[ -f ${coltable} ]]; then
+  source ${coltable}
+fi
 
-## background colors .. don't need many
-bg_normal=`echo -e "\033[49m"`
-bg_white=`echo -e "\033[40m"`
-bg_red=`echo -e "\033[41m"`
-bg_green=`echo -e "\033[42m"`
-
-## text setting
-normal=`echo -e "\033[0m"`
-bold=`echo -e "\033[1m"`
-uline=`echo -e "\033[4m"`
-blink=`echo -e "\033[5m"`
-hide=`echo -e "\033[8m"`
-
-ALERT=${bold}${bg_white}${red} # Bold White on red background
-#ALL_GOOD=${bold}${bg_green}${white} # Bold White on red background
-ALL_GOOD=${lt_green}
-
-echo -e "It is now: ${ALL_GOOD}$(date +%c)${normal}\n"
+echo -e "It is now: ${COL_GREEN}$(date +%c)${COL_NC}\n"
 
 ##### FUNCTIONS #####
 thirdline () {
@@ -72,11 +47,13 @@ thirdline () {
 }
 
 function _exit() {
-  echo -e "${bg_white}${red}See ya'll later, enjoy!${normal}"
+  echo -e "${COL_RED}See ya'll later, enjoy!${COL_NC}"
 }
 trap _exit EXIT
 
-# function that we can call on-demand to enable all commands and output to a log file, useful when performing and audit where you want to log command(s), variables and results for later review and reporting
+# function that we can call on-demand to enable all commands and output to a log
+#  file, useful when performing and audit where you want to log command(s),
+#  variables and results for later review and reporting
 function rec() {
    # https://www.contextis.com/en/blog/logging-like-a-lumberjack
    #  use something like aha to convert log file to readable HTML format
@@ -86,18 +63,18 @@ function rec() {
 # Returns a color according to free disk space in $PWD.
 function disk_color() {
   if [ ! -w "${PWD}" ]; then # no write privileges in the current directory
-    echo -en ${Red}
+    echo -en ${COL_URG_RED}
   elif [ -s "${PWD}" ] ; then
     local used=$(command df -P "$PWD" | awk 'END {print $5} {sub(/%/,"")}')
     if [ ${used} -gt 95 ]; then
-      echo -en ${ALERT}           # Disk almost full (>95%).
+      echo -en ${COL_URG_RED}           # Disk almost full (>95%).
     elif [ ${used} -gt 85 ]; then
-      echo -en ${lt_red}            # Free disk space almost gone.
+      echo -en ${COL_RED}               # Free disk space almost gone.
     else
-      echo -en ${green}           # Free disk space is ok.
+      echo -en ${COL_GREEN}             # Free disk space is ok.
     fi
   else
-    echo -en ${cyan}              # Current directory is size '0' (like /proc, /sys etc
+    echo -en ${COL_CYAN}                # Current directory is size '0' (like /proc, /sys etc
   fi
 }
 
@@ -127,37 +104,36 @@ extract () {
 ##### TESTS FOR PROMPT STUFF #####
 # Test the user type:
 if [ ${USER} == "root" ]; then
-  ME=${bold}${red}
+  ME=${bold}${COL_RED}
 elif [[ "${USER}" -eq "${LOGNAME}" ]]; then
    if [ ${SUDO_USER} ]; then
-      ME=${cyan}
+      ME=${COL_CYAN}
    else
-      ME=${green}
+      ME=${COL_GREEN}
    fi
 else
-  ME=${green}
+  ME=${COL_GREEN}
 fi
 
 # Test the connection type:
 if [[ -n "${SSH_CONNECTION}" ]]; then
-  CNX=${green}
+  CNX=${COL_GREEN}
 elif [[ -t 0 ]]; then
-  CNX=${cyan}
+  CNX=${COL_CYAN}
 else
-  CNX=${lt_red}
+  CNX=${COL_RED}
 fi
 
 PROMPT_HISTORY="history -a"
 case ${TERM} in
   *term | rxvt | linux | xterm-256color)
-    #PS1='\D{%d-%d %H:%M} ${ME}\u${normal} on ${CNX}\h${normal} in ${disk_color}\w${normal}\n\$ '
-    #PS1="[\d \@] [\#] \u@${CNX}\h${normal} ${disk_color}\w${normal}\n--\\$ "
-    #PS1="---[\#] ${ME}\u${normal} on ${CNX}\h${normal}\n-(\D{%d%b %H:%M})---> "
-    #PS1="[\#] \D{%d%b %H:%M} ${ME}\u${normal}@${CNX}\h${normal}:${disk_color}\w${normal}\n\$ "
-    #PS1="---[\#] ${ME}\u${normal} on ${CNX}\h${normal}\n-(\D{%d%b %H:%M})---> "
-    #PS1="[\#] \D{%d-%b %H:%M} ${ME}\u${normal} on ${CNX}\h${normal} in ${disk_color}\w${normal}\n"'\$ '
-    #PS1=$'\xe2\x94\x8c\xe2\x94\x80[\#] \D{%d-%b %H:%M} ['${ME}'\u'${normal}'@'${CNX}'\h'${normal}$']\xe2\x94\x80\xe2\x94\x80['${disk_color}'\w'${normal}$']\n\xe2\x94\x94\xe2\x94\x80\$ '
-    PS1=$'\xe2\x94\x8c\$ \D{%d-%b %H:%M} '${ME}'\u'${normal}' on '${CNX}'\h'${normal}$' in '${disk_color}'\w'${normal}$'\n\xe2\x94\x94\$ '
+    #PS1='\D{%d-%d %H:%M} ${ME}\u${COL_NC} on ${CNX}\h${COL_NC} in ${disk_color}\w${COL_NC}\n\$ '
+    #PS1="[\d \@] [\#] \u@${CNX}\h${COL_NC} ${disk_color}\w${COL_NC}\n--\\$ "
+    #PS1="---[\#] ${ME}\u${COL_NC} on ${CNX}\h${COL_NC}\n-(\D{%d%b %H:%M})---> "
+    #PS1="[\#] \D{%d%b %H:%M} ${ME}\u${COL_NC}@${CNX}\h${COL_NC}:${disk_color}\w${COL_NC}\n\$ "
+    #PS1="---[\#] ${ME}\u${COL_NC} on ${CNX}\h${COL_NC}\n-(\D{%d%b %H:%M})---> "
+    #PS1="[\#] \D{%d-%b %H:%M} ${ME}\u${COL_NC} on ${CNX}\h${COL_NC} in ${disk_color}\w${COL_NC}\n"'\$ '
+    PS1=$'\xe2\x94\x8c\$ \D{%d-%b %H:%M} '${ME}'\u'${COL_NC}' on '${CNX}'\h'${COL_NC}$' in '${disk_color}'\w'${COL_NC}$'\n\xe2\x94\x94\$ '
 
     # check if fortune and cowsay are executable, then print a small fortune with random character
     if [ -x /usr/games/cowsay -a -x /usr/games/fortune ]; then
@@ -169,7 +145,7 @@ case ${TERM} in
    ;;
   *)
     #PS1="\A \u at \h \w \$"
-    PS1="\D{%d-%b %H:%M} ${ME}\u${normal} in ${disk_color}\w${normal}\$ "
+    PS1="\D{%d-%b %H:%M} ${ME}\u${COL_NC} in ${disk_color}\w${COL_NC}\$ "
   ;;
 esac
 
@@ -182,11 +158,11 @@ if [ -d ~/scripts/python ]; then
 fi
 
 export JAVA_HOME="/usr/lib/jvm/jdk-11.0.5"
-export PATH=${PATH}:/usr/local/scripts:${JAVA_HOME}/bin:${appendPATH}
+export PATH=${PATH}:/usr/local/sbin/:/usr/local/scripts:${JAVA_HOME}/bin:${appendPATH}
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
 export HISTSIZE=1000000
 export HISTFILESIZE=1000000
 export HISTIGNORE="&:ls:bg:fg:ll:h"
-export HISTTIMEFORMAT="$(echo -e ${bold}${cyan})[%Y%b%d %T]$(echo -e ${normal}) "
+export HISTTIMEFORMAT="$(echo -e ${COL_BOLD}${COL_CYAN})[%Y%b%d %T]$(echo -e ${COL_NC}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
