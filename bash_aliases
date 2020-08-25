@@ -17,14 +17,15 @@ alias ..='cd ..'
 alias du='du -kh'       # more readable output
 alias df='df -Tha --total'
 alias ls='ls -h --time-style=+"%Y-%m-%d %H:%M:%S" --color=auto'
-alias lc='ls -ltr'        #  Sort by/show change time,most recent last.
-alias lf='ls -lth'
+alias lc='ls -lhtr'  # long / mod time, new first / reverse [show newest bottom list]
+alias lf='ls -lth'   # long / human [1K 23M 2G] / sort mod time, new first
 
 # aliases for the lazy person I am
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias mc='mc -x'
+alias curll='curl -L'
 alias ports='sudo netstat -tulanp | less'
 #alias reboot='sudo /sbin/reboot'
 #alias shutdown='sudo /sbin/poweroff'
@@ -33,5 +34,5 @@ alias nat='echo -n "ext IP: ";wget -O - -q icanhazip.com;echo'
 alias weather='curl http://wttr.in'
 alias wipe='shred -n5 -u'
 alias wl='while true;cls;date +%Y%b%d\ %T;do find . -maxdepth 1 -name "????????" ls;sleep 300;done;'
-alias tmux.main='tmux new-session -s main \; split-window -h -p 50 \;'
+alias tmux.main='tmux new-session -s main \; split-window -v -p 50 \;'
 alias wget='wget -c'

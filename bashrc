@@ -41,9 +41,9 @@ fi
 echo -e "It is now: ${COL_GREEN}$(date +%c)${COL_NC}\n"
 
 ##### FUNCTIONS #####
-thirdline () {
+function altline () {
    # function that will print every third line green to make reading easier
-   awk '{if (NR%3==0){print "\033[32m" $0 "\033[0m"} else{print}}';
+   awk '{if (NR%2==0){print "\033[32m" $0 "\033[0m"} else{print}}';
 }
 
 function _exit() {
@@ -79,7 +79,7 @@ function disk_color() {
 }
 
 # function that can extract any standard compressed file type based on extension
-extract () {
+function extract () {
    if [ -f $1 ] ; then
       case $1 in
          *.tar)      tar xf $1      ;;
