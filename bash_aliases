@@ -29,10 +29,17 @@ alias curll='curl -L'
 alias ports='sudo netstat -tulanp | less'
 #alias reboot='sudo /sbin/reboot'
 #alias shutdown='sudo /sbin/poweroff'
+
+## show iptables rules details, can be long if loaded IOC drop rules
 alias ipt='sudo iptables -L -n -v --line-numbers'
+## show iptables details, but only show lines that have a hit [have been triggered]
+alias iptf='sudo iptables -L -n -v --line-numbers | awk '"'"'{if ($2>0) print}'"'"' | grep [0-9]'
+
 alias nat='echo -n "ext IP: ";wget -O - -q icanhazip.com;echo'
 alias weather='curl http://wttr.in'
 alias wipe='shred -n5 -u'
-alias wl='while true;cls;date +%Y%b%d\ %T;do find . -maxdepth 1 -name "????????" ls;sleep 300;done;'
 alias tmux.main='tmux new-session -s main \; split-window -v -p 50 \;'
 alias wget='wget -c'
+
+# oddly specific items
+alias wl='while true;cls;date +%Y%b%d\ %T;do find . -maxdepth 1 -name "????????" ls;sleep 300;done;'
