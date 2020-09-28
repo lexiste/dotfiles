@@ -133,7 +133,7 @@ case ${TERM} in
     #PS1="[\#] \D{%d%b %H:%M} ${ME}\u${COL_NC}@${CNX}\h${COL_NC}:${disk_color}\w${COL_NC}\n\$ "
     #PS1="---[\#] ${ME}\u${COL_NC} on ${CNX}\h${COL_NC}\n-(\D{%d%b %H:%M})---> "
     #PS1="[\#] \D{%d-%b %H:%M} ${ME}\u${COL_NC} on ${CNX}\h${COL_NC} in ${disk_color}\w${COL_NC}\n"'\$ '
-    PS1=$'\xe2\x94\x8c\$ \D{%d-%b %H:%M} '${ME}'\u'${COL_NC}'::'${CNX}'\h'${COL_NC}$' in '${disk_color}'\w'${COL_NC}$'\n\xe2\x94\x94\$ '
+    PS1=$'\xe2\x94\x8c [\D{%d-%b %H:%M} '${ME}'\u'${COL_NC}'::'${CNX}'\h'${COL_NC}$'] ['${disk_color}'\w'${COL_NC}]$'\n\xe2\x94\x94 '
 
     # check if fortune and cowsay are executable, then print a small fortune with random character
     if [ -x /usr/games/cowsay -a -x /usr/games/fortune ]; then
