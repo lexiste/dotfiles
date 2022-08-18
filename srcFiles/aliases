@@ -1,0 +1,53 @@
+# global aliases -- new for zsh
+## cat readme.txt L --> cat readme.txt | less
+alias -g G="| grep"
+alias -g L="| less"
+
+alias xs='cd'
+alias vf='cd'
+alias moer='more'
+alias moew='more'
+alias kk='ll'
+alias cls='clear'
+alias celar='clear'
+alias ckear='clear'
+alias rm='rm -iv'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias mkdir='mkdir -p'
+alias more='less'
+alias nc='nc -v'
+alias which='type -a'
+#alias ..='cd ..'
+alias du='du -kh'       # more readable output
+alias df='df -Tha --total'
+alias ls='ls -h --time-style=+"%Y-%m-%d %H:%M:%S" --color=auto'
+alias lc='ls -lhtr'  # long / mod time, new first / reverse [show newest bottom list]
+alias lf='ls -lth'   # long / human [1K 23M 2G] / sort mod time, new first
+
+# aliases for the lazy person I am
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias mc='mc -x'
+alias curll='curl -L'
+alias ports='sudo netstat -tulanp L'
+#alias reboot='sudo /sbin/reboot'
+#alias shutdown='sudo /sbin/poweroff'
+
+## show iptables rules details, can be long if loaded IOC drop rules
+alias ipt='sudo iptables -L -n -v --line-numbers'
+## show iptables details, but only show lines that have a hit [have been triggered]
+alias iptf='sudo iptables -L -n -v --line-numbers | awk '"'"'{if ($2>0) print}'"'"' | grep [0-9]'
+
+alias nat='echo -n "ext IP: ";wget -O - -q icanhazip.com;echo'
+alias weather='curl http://wttr.in'
+alias wipe='shred -n5 -u'
+alias tmux.main='tmux new-session -s main \; split-window -v -p 50 \;'
+alias wget='wget -c'
+
+alias install='sudo apt-get install'
+alias remove='sudo apt-get remove --purge'
+
+# oddly specific items
+alias wl='while true;cls;date +%Y%b%d\ %T;do find . -maxdepth 1 -name "????????" ls;sleep 300;done;'
